@@ -1,0 +1,134 @@
+<html lang="en-US">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"> 
+	<meta name="HandheldFriendly" content="true" /> 
+	<meta name="apple-mobile-web-app-capable" content="yes" /> 
+	<meta http-equiv="cleartype" content="on">
+	<title>iQuestion</title>
+		<link rel="stylesheet" type="text/css" href="jquery.mobile-1.1.1.css" />
+		<link rel="stylesheet" type="text/css" href="styles.css" />
+		<script type="text/javascript" src="jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="cordova-1.7.0.js"></script>
+		<script type="text/javascript" src="jquery.mobile-1.1.1.js"></script>
+	 <style> 
+			 dl>dt{
+			 padding:5px;
+			 background-color:white;
+			 }
+			 dd{			 
+			 padding:5px;
+			 margin-left:-3px;
+			 }
+			 dt{ 
+			 width:100%;
+			 background-color:red;
+			 }
+	 </style>
+</head>
+
+<body>
+
+	<div data-role="header" data-add-back-btn="true" data-position="fixed">  
+			<a href='index.html' data-rel="back" data-icon="back">Back</a>
+		 	<h1>Geo Map </h1>
+				<a href='survey.html' data-role='button' data-icon='plus' class='ui-btn-right'>Survey</a>
+		</div>
+			<div data-role="content"> 
+			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+		
+			<div style="align:center;display: inline;" id="quest1" >	
+				<label for="select-choice-10" class="select ui-select"><div id='question'></div></label>
+			
+				<label for="select-choice-10" class="select ui-select"><div id='desc'></div></label>
+					<!-- Multiple Choice -->
+				<div class="ui-select" id='multiplechoice' style="display: none; ">
+					  <span class="ui-li-count ui-btn-up-c ui-btn-corner-all" style="display: none; ">0</span>
+						<select name="select-choice-10" id="select-choice-10s" multiple="multiple" data-native-menu="false" tabindex="-1"></select>
+				</div>
+				
+				<!-- Single Choice -->
+				<div id='singlechoice' ></div>
+		</div>
+
+	</div>
+		<!--<div style="bottom:0px;position:fixed;right:5px;" id="responsebutton" >	
+			<button type="submit" id='login' data-theme="a" onClick="changeQuestion('next');" data-transition='slide'>Continue</button> 
+		</div>-->
+	</div>
+	
+<script>
+		
+		getData();
+		goQuestion("1");
+		function getData(){
+			$.getJSON('http://beta.completemr.com/ilink/mytest/index.php', function(data) {
+			    var setstr = JSON.stringify(data);
+			
+				localStorage.setItem('strlinks', setstr);
+			  var	getstrs = localStorage.getItem('strlinks');
+				return getstrs;
+			});
+		}
+	
+	    alert(getstr);
+	function goQuestion(getstr,quest_num){
+alert(getstr);
+		reset_div();
+
+		  $.each(getstr, function(key, val) {
+		  	if(quest_num == key){
+		  		
+			  	//Question title
+			  	$("#question").html(val["question"]);
+			  	temp ="";	
+			  	//Question Type : multiplechoice
+			  	if(val['type'] == "multiplechoice"){	  		
+			  		$("#desc").html("Please Choose:");
+			  		$("#multiplechoice").show();
+			  		
+						temp ="<option>Choose options</option>";
+					  $.each(val["answer"], function(k, child) {
+				  				temp = temp +'<option value="'+k+'">'+child+'</option>';
+						});		
+						$("#select-choice-10s").html(temp);
+						$("#select-choice-10s").selectmenu('refresh');
+			  	}
+			  							
+			  	//Question Type : singlechoice
+			  	if(val['type'] == "singlechoice"){
+			  		$("#singlechoice").show();							
+							$("#singlechoice").html(function(){
+								temp ='<fieldset data-role="controlgroup">';
+								$.each(val["answer"], function(k, child) {
+									temp += '<input type="radio" name="radio-choice-1" id="radio-choice-'+k+'" value="'+k+'" />';
+								  temp += '<label for="radio-choice-'+k+'">'+child+'</label>';
+								});	
+								temp +='</fieldset>';								
+								return temp;
+							});
+							$("#singlechoice").trigger("create");
+			  	}
+			  }
+		  });
+		}
+		
+		function reset_div(){
+			$("#desc").html("");
+			$("#desc").hide();
+			$("#multiplechoice").hide();
+			$("#singlechoice").hide();
+		}
+
+</script>
+<div data-role="footer" data-position="fixed" class="geo_footer">		
+			<div data-role="navbar">
+				<ul>
+					<li><a data-ajax='false' href='#' onClick="goQuestion('1');" data-transition='slide' data-direction='reverse'>Previous</a></li>
+					<li><a data-ajax='false' href='#' onClick="goQuestion('2');" data-transition='slide'>Next</a></li>
+				</ul>
+			</div>
+	</div>
+
+</body>
+</html>
