@@ -66,7 +66,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 			  str += '</div></div>'; 
 			}
 			else if("audio" in arr['extra']){	
-				audiofile = '/android_asset/www/tmp/test.mp3';//arr['extra']['audio'];//
+				audiofile = arr['extra']['audio'];//
 				str += '<div id="audioPosition"><input type="range" name="slider" id="slider" value="0" min="0" max="100" data-highlight="true" /></div>';
 			  str += '<br/><div id="audioLabel"></div>';
 				str += '<div data-role="controlgroup" data-type="horizontal" class="ui-corner-all ui-controlgroup ui-controlgroup-horizontal"><div class="ui-controlgroup-controls">'; 
