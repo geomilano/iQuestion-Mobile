@@ -6,14 +6,14 @@ import org.apache.cordova.*;
 
 public class HelloGeoActivity extends DroidGap {
     /** Called when the activity is first created. */
-//	 CustomeNativeAccess cna;
+	 CustomeNativeAccess cna;
 	@Override
    
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        super.init();    
-//        cna = new CustomeNativeAccess(this, appView);     
-//        appView.addJavascriptInterface(cna, "CustomeNativeAccess");   
+        super.init();    
+        cna = new CustomeNativeAccess(this, appView);     
+        appView.addJavascriptInterface(cna, "CustomeNativeAccess");   
         super.loadUrl("file:///android_asset/www/index.html");
     }
 }
