@@ -3,16 +3,16 @@ $.getScript("js/extra.js");
 
 	var arr =JSON.parse(valObject);
 	var temp = "";
-  $("#textinput").show();			
- 	$("#textinput").html(function(){
+  $("#displayquestion").show();			
+ 	$("#displayquestion").html(function(){
   
 		temp += checkExtra(arr);
 		
- 		temp +='<input type="text" name="name" id="basic" data-mini="true" />';
+ 		temp +='<input type="text" name="'+arr['name']+'" id="basic" data-mini="true" />';
  		 return temp;
  	});		
  	
- 	$("#textinput").trigger("create");
+ 	$("#displayquestion").trigger("create");
  	
  		//Remove tempararily local storage   
 	localStorage.removeItem('valObj');  

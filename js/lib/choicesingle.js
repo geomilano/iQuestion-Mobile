@@ -1,18 +1,18 @@
 
 	var valObject = localStorage.getItem('valObj');
-	$("#singlechoice").show();					
+	$("#displayquestion").show();					
 	    var arr =JSON.parse(valObject);
 			temp ='<fieldset data-role="controlgroup">';
 			$.each(arr['answer'], function(k, child) {
-				temp += '<input type="radio" name="radio-choice-1" id="radio-choice-'+k+'" value="'+k+'" />';
+				temp += '<input type="radio" id="radio-choice-'+k+'" name="'+arr['name']+'" value="'+k+'" />';
 			  temp += '<label for="radio-choice-'+k+'">'+child+'</label>';
 			});	
 			temp +='</fieldset>';		
 			
 	
-		$("#singlechoice").html(temp);
+		$("#displayquestion").html(temp);
 	
-	$("#singlechoice").trigger("create");
+	$("#displayquestion").trigger("create");
 
 
 	//Remove tempararily local storage

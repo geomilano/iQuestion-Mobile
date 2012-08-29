@@ -9,12 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.1.1.css" />
 		<link rel="stylesheet" type="text/css" href="css/media_style.css" />
 		<link rel="stylesheet" type="text/css" href="css/styles.css" />
-		<script type="text/javascript" charset="utf-8" src="js/cordova-2.0.0.js"></script>
-		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
-		<script type="text/javascript" src="js/jquery.mobile-1.1.1.js"></script>
-		<script type="text/javascript" src="js/media_script.js"></script>
-		<script type="text/javascript" src="js/extra.js"></script>
-	 <style> 
+		<style> 
 			 dl>dt{
 			 padding:5px;
 			 background-color:white;
@@ -27,12 +22,18 @@
 			 width:100%;
 			 background-color:red;
 			 }
-			 #selectrating{
+			 .selectrating{
 			 	width: 120px ; 
 			 	min:1;
 			 	max:3;
 			}
 	 </style>
+		<script type="text/javascript" charset="utf-8" src="js/cordova-2.0.0.js"></script>
+		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="js/jquery.mobile-1.1.1.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/media_script.js"></script>
+		<script type="text/javascript" src="js/extra.js"></script>
 	 
 </head>
 
@@ -47,26 +48,13 @@
 			<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
 		
 			<div style="align:center;display: inline;" id="quest1" >	
-				<label for="select-choice-10" class="select ui-select"><div id='question'>Downloading survey...</div></label>
+				<form name='iqmform'>
+				<label for="questiontitle" class="select ui-select"><div id='question'>Downloading survey...</div></label>
 			
-				<label for="select-choice-10" class="select ui-select"><div id='desc'></div></label>
-					<!-- Multiple Choice -->
-				<div class="ui-select" id='multiplechoice' style="display: none; ">
-
-				</div>
+				<label for="questiondesc" class="select ui-select"><div id='desc'></div></label>
 				
-				<!-- Multiple Check -->
-				<div id='multiplecheck' ></div>	
-				
-				<!-- Single Choice -->
-				<div id='singlechoice' ></div>
-				
-				<!-- Text Input -->
-				<div id='textinput' ></div>
-				
-				<!-- selectrating -->
-				<div id='selectrating' ></div>
-
+				<div id='displayquestion' ></div>	
+			</form>
       </div>
 
 	</div>
@@ -84,140 +72,7 @@
 				</ul>
 			</div>
 </div>
-<script>
-/* Initialize */
-$('#prev').addClass('ui-disabled');
-$('#next').addClass('ui-disabled');
-var audiofile;
-var tmplocalpath;
-var page; 
 
-document.addEventListener("deviceready", onDeviceReady, false);
-
-/** System loaded when the phone is ready **/
-	function onDeviceReady() {
-		//window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
-		
-		getdata();
-		$('#prev').removeClass('ui-disabled');
-		$('#next').removeClass('ui-disabled');
-		goQuestion("1",'');
-	}
-	
-	/** Function **/   
-	function getdata(){				
-		  /* Load question from server*/
-			$.getJSON('http://beta.completemr.com/ilink/mytest/index.php', function(data) {
-				var lquestionObj = localStorage.getItem("questionObj");
-				if(lquestionObj){
-					localStorage.removeItem('questionObj');
-				}				
-
-				$.each(data, function(key, val) {
-					if("extra" in val){
-						if("audio" in val['extra']){ 
-							/** Download to local if detect audio is available **/
-							download(val['extra']['audio']);	
-							
-							loopcheck=  setInterval(function() {
-				         if(tmplocalpath === undefined){
-				         		//Waiting for downloading end
-				         }else{
-				         	clearInterval(loopcheck);
-				         	data[key]['extra']['audio_local'] = tmplocalpath;		
-				         	localStorage.removeItem('questionObj');	
-				         	localStorage.setItem('questionObj', JSON.stringify(data));
-				         
-				        }
-				       }, 1000);
-						}
-					}
-				});
-				
-				localStorage.setItem('questionObj', JSON.stringify(data));			
-			});			
-	}
-	
-	  function goQuestion(quest_num,loadtype){
-			// Set Page
-			if(quest_num != ""){
-				page =quest_num;
-				page = parseInt(page);
-			}
-			// Set Navigation
-			if(loadtype != ""){
-				if(loadtype == "prev"){
-					page -= 1;
-				}else{
-					page += 1;
-				}
-			}
-			
-			//Retrieve object from local Storage
-			checkobj=  setInterval(function() {
-				var retrievedObject = localStorage.getItem('questionObj');
-			   if(retrievedObject === null){
-			   		getdata();
-			   }else{
-				  clearInterval(checkobj);
-				  reset_div();
-				  $.each(JSON.parse(retrievedObject), function(key, val) {
-				  	
-				  	if(page == key){
-				  		localStorage.setItem('valObj', JSON.stringify(val));
-				  		if(page == '1'){
-					  		$('#prev').addClass('ui-disabled');
-					  	}else{
-					  		$('#prev').removeClass('ui-disabled');	
-					  	}
-				  	
-				  		if(val["to"] == 'end'){
-					  		$('#next').addClass('ui-disabled');
-					  	}else{
-					  		$('#next').removeClass('ui-disabled');
-					  	}
-					  	
-					  	//Question title
-					  	$("#question").html(val["question"]);
-					  	temp ="";	
-					  	//Question Type : multiplechoice
-					  	if(val['type'] == "multiplechoice"){	  		
-								$.getScript("js/lib/multiplechoice.js");
-					  	}
-					  	
-					  	//Question Type : multiplecheck
-					  	if(val['type'] == "multiplecheck"){	  		
-								$.getScript("js/lib/multiplecheck.js");
-					  	}						
-					  	
-					  	//Question Type : singlechoice
-					  	if(val['type'] == "singlechoice"){
-									$.getScript("js/lib/singlechoice.js");
-					  	}
-					  	
-					  	//Question Type : textinput
-					  	if(val['type'] == "textinput"){
-								$.getScript("js/lib/textinput.js");
-					  	}
-					  	
-					  	//Question Type : selectrating
-					  	if(val['type'] == "selectrating"){
-								$.getScript("js/lib/selectrating.js");
-					  	}
-					  }
-				  });
-			  }
-			 }, 1000);
-		
-		}
-						
-		function submitAnswer(loadtype){
-			
-			goQuestion('',loadtype)
-		}
-
-
-</script>
 </div>
 </body>
 </html>

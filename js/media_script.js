@@ -5,8 +5,7 @@ var audioTimer = null;
 var pausePos = 0;
 
 /* play audio file */
-function playAudio(file){
-	
+function playAudio(file){	
 	if (!audio) { 
 		audio = new Media(file, function(){}, function(error){ // error callback
     	audio.stop();
@@ -31,7 +30,6 @@ function playAudio(file){
                         setAudioPosition(position);
                     }
                 }, function(e) { // get position error
-                   
                     //setAudioPosition(duration);
                 }
             );
@@ -41,7 +39,6 @@ function playAudio(file){
 
 /* get audio duration*/
 function audioDuration(){
-	 // get audio duration
     var duration = audio.getDuration();
     
     // set slider data
