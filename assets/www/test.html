@@ -38,13 +38,10 @@
 			<a href='survey.html' data-ajax='false' data-role='button' data-icon='grid' class='ui-btn-right'>Survey</a>
 		</div>
 		<div data-role="content"> 
-				<a data-ajax='false' data-role='button' data-transition='flip' id='demo_delete'>Delete</a>
+				<a data-ajax='false' data-role='button' data-transition='flip' id='demo_delete'>Delete App Data</a>
+				<a data-ajax='false' data-role='button' data-transition='flip' id='get_number'>Get Phone Number</a>
 <script>
 document.addEventListener("deviceready", onDeviceReady, false);
-var imeiNumber = window.CustomeNativeAccess.getMyPhoneNumber();
-		alert("phone number: " +imeiNumber);
-		
-
 	function onDeviceReady() {
 		
 			window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fs) {
@@ -62,7 +59,12 @@ var imeiNumber = window.CustomeNativeAccess.getMyPhoneNumber();
        }, function (error) {
                alert(error.code);
        }); 
-       
+      
+      $('#get_number').click(function(){
+      		var imeiNumber = window.CustomeNativeAccess.getMyPhoneNumber();
+					alert("phone number: " +imeiNumber);
+		});
+		
 		$('#demo_delete').click(function(){
 			// Delete file from app cache
 				 window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fs) {
@@ -70,8 +72,10 @@ var imeiNumber = window.CustomeNativeAccess.getMyPhoneNumber();
             directoryReader.readEntries(function(entries) {
                 var i;
                 for (i=0; i<entries.length; i++) {
+                	if(entries[i] != "webviewCache"){
                 		entries[i].remove(success, fail);
-                    console.log(entries[i].name);
+                		console.log(entries[i].name);
+                	}
                 }
             }, function (error) {
                 alert("a : " +error.code);
@@ -89,7 +93,7 @@ var imeiNumber = window.CustomeNativeAccess.getMyPhoneNumber();
 	}
 
 	function fail(error) {
-	    alert("c : " +error.code);
+	   alert("No data to delete");
 	}
 </script>
 		</div>
