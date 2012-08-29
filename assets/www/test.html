@@ -61,8 +61,9 @@ document.addEventListener("deviceready", onDeviceReady, false);
        }); 
       
       $('#get_number').click(function(){
-      		var imeiNumber = window.CustomeNativeAccess.getMyPhoneNumber();
-					alert("phone number: " +imeiNumber);
+      		alert("Trying to get number");
+      		var msisdn = window.CustomeNativeAccess.getMyPhoneNumber();
+					alert("phone number: " +msisdn);
 		});
 		
 		$('#demo_delete').click(function(){
