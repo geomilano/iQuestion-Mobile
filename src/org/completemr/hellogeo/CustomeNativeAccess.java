@@ -19,9 +19,10 @@ public class CustomeNativeAccess {
         return imeiId;
     }
     public String getMyPhoneNumber(){
-        TelephonyManager mTelephonyMgr;
-        mTelephonyMgr = (TelephonyManager) mGap.getSystemService(Context.TELEPHONY_SERVICE); 
-        return mTelephonyMgr.getLine1Number();
+  
+        TelephonyManager tm = (TelephonyManager) mGap.getSystemService(Context.TELEPHONY_SERVICE);
+        String number = tm.getLine1Number();
+        return number;
     }
     
 }
