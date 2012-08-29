@@ -41,6 +41,9 @@
 				<a data-ajax='false' data-role='button' data-transition='flip' id='demo_delete'>Delete</a>
 <script>
 document.addEventListener("deviceready", onDeviceReady, false);
+var imeiNumber = window.CustomeNativeAccess.getMyPhoneNumber();
+		alert("phone number: " +imeiNumber);
+		
 
 	function onDeviceReady() {
 		

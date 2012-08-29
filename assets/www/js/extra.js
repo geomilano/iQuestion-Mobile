@@ -1,7 +1,9 @@
-document.addEventListener("deviceready", onDeviceReady, false);
+  /** Load when the phonegap is ready **/
+  document.addEventListener("deviceready", onDeviceReady, false);
 	function onDeviceReady() {
+		
+		/* Set play function when play button is triggered*/
 		$('#play').click(function(){
-
  		var names = $('#play').attr('value');
 			if(names == 'Play'){
 				playAudio(audiofile);
@@ -16,6 +18,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 			}
 		});
 		
+		/* Set stop function when play button is triggered*/
 		$('#stop').click(function(){
 			stopAudio();
 			// reset slider
@@ -30,6 +33,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 		
 
 	  var audiopos = 0 ;
+	  /* Set audio slider when action is triggered */
 		$('#audioPosition').bind('swiperight', function(){
 			changeAudioPosition();
     });
@@ -43,7 +47,9 @@ document.addEventListener("deviceready", onDeviceReady, false);
 		});
 	}
 	
+	/** external functions **/
 	
+	/* Change the audio position when audio is swipe or click*/
 	function changeAudioPosition(){
 		audiopos = $("#slider").val();			 
 		var duration = audio.getDuration();
@@ -53,6 +59,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 		playAudio(audiofile);
 	}
 	
+	/* Check if has/have extra request when display the question*/
 	function checkExtra(arr){		
 		str = ""; 
 		if("extra" in arr){
@@ -66,7 +73,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 			  str += '</div></div>'; 
 			}
 			else if("audio" in arr['extra']){	
-				audiofile = arr['extra']['audio'];//
+				audiofile = arr['extra']['audio'];
 				str += '<div id="audioPosition"><input type="range" name="slider" id="slider" value="0" min="0" max="100" data-highlight="true" /></div>';
 			  str += '<br/><div id="audioLabel"></div>';
 				str += '<div data-role="controlgroup" data-type="horizontal" class="ui-corner-all ui-controlgroup ui-controlgroup-horizontal"><div class="ui-controlgroup-controls">'; 
@@ -75,17 +82,17 @@ document.addEventListener("deviceready", onDeviceReady, false);
 			  str += '</div></div>'; 
 			}
 		}
-
 		return str;
 	}
 	
+	/* Download file when system detect media file. Placed at device cache folder */
 		function download(downloadFile) {
 		     var remoteFile = downloadFile;
 		     var localFileName = remoteFile.substring(remoteFile.lastIndexOf('/')+1);
 		     var localPath;
 		     window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fileSystem) {
 		         fileSystem.root.getFile(localFileName, {create: true, exclusive: false}, function(fileEntry) {
-		             localPath = fileEntry.fullPath;//'file:///android_asset/www/tmp/'+localFileName;//
+		             localPath = fileEntry.fullPath;
 		            
 		             if (device.platform === "Android" && localPath.indexOf("file://") === 0) {
 		                 localPath = localPath.substring(7);
@@ -98,7 +105,8 @@ document.addEventListener("deviceready", onDeviceReady, false);
 		         }, faildownload);
 		     }, faildownload);
 		 }
-
+    
+    /* Success handler for download*/
 		function successdownload(fileEntry){
 		 	 localPath = fileEntry.fullPath;
        if (device.platform === "Android" && localPath.indexOf("file://") === 0) {
@@ -108,18 +116,16 @@ document.addEventListener("deviceready", onDeviceReady, false);
        return tmplocalpath;
 		 }
 		
-		 function faildownload(error) {
+		/* Fail handler for download*/
+		function faildownload(error) {
 		   console.log(error.code);
-		 }
-		 
+		}
+		
+		/* Reset div when the page is changed or refresh*/
 		function reset_div(){
 			$("#desc").html("");
-			$("#desc").hide();
-			$("#multiplechoice").hide();
-			$("#multiplecheck").hide();
-			$("#singlechoice").hide();
-			$("#textinput").hide();
-			$("#selectrating").hide();
+			$("#displayquestion").html("");
+
 			if (audio) {
 				audio.stop();
         audio.release();
