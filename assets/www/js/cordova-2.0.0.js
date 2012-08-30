@@ -936,7 +936,7 @@ module.exports = function(success, fail, service, action, args) {
 
         // If error, then display error
         else {
-            console.log("Error: Status="+v.status+" Message="+v.message);
+           console.log("Error: Status="+v.status+" Message="+v.message+" service="+service+" action="+action);
 
             // If there is a fail callback, then call it now with returned value
             if (fail) {
