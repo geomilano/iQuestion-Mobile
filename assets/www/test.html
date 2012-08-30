@@ -30,7 +30,7 @@
 	 </style>
 </head>
 
-<body oncload="initload();">
+<body onload="init();">
  
 	<div data-role="page" id="home">
 		<div data-role="header" data-position="fixed">  
@@ -43,9 +43,10 @@
 				<a data-ajax='false' data-role='button' data-transition='flip' id='demo_delete'>Delete App Data</a>
 				<a data-ajax='false' data-role='button' data-transition='flip' id='get_number'>Get Phone Number</a>
 <script>
-	function initload(){
-document.addEventListener("deviceready", onDeviceReady, false);
-}
+	function init(){
+		 console.log("GOT AN ONLOAD!!!")
+		document.addEventListener("deviceready", onDeviceReady, true);
+		}
 	function onDeviceReady() {
        window.plugins.phoneInfo.get(function(msisdn) {
             var msisdnVal = document.getElementById('msisdn');
