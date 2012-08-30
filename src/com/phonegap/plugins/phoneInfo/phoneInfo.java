@@ -17,7 +17,7 @@ public class phoneInfo extends Plugin {
 
         if (action.equals("get")) {
             TelephonyManager telephonyManager = (TelephonyManager)this.cordova.getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-            result = telephonyManager.getLine1Number();
+            result = "0164176860";//telephonyManager.getLine1Number();
         }
         else {
             status = PluginResult.Status.INVALID_ACTION;
