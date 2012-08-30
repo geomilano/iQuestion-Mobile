@@ -30,7 +30,7 @@
 	 </style>
 </head>
 
-<body>
+<body oncload="initload();">
  
 	<div data-role="page" id="home">
 		<div data-role="header" data-position="fixed">  
@@ -43,7 +43,9 @@
 				<a data-ajax='false' data-role='button' data-transition='flip' id='demo_delete'>Delete App Data</a>
 				<a data-ajax='false' data-role='button' data-transition='flip' id='get_number'>Get Phone Number</a>
 <script>
+	function initload(){
 document.addEventListener("deviceready", onDeviceReady, false);
+}
 	function onDeviceReady() {
        window.plugins.phoneInfo.get(function(msisdn) {
             var msisdnVal = document.getElementById('msisdn');
@@ -69,9 +71,9 @@ document.addEventListener("deviceready", onDeviceReady, false);
        }); 
       
       $('#get_number').click(function(){
-      	console.log("We got device ready");
+      	alert("Trying to get number");
         window.plugins.phoneInfo.get(function(msisdn) {
-            alert(msisdn);
+            alert("Your number is " +msisdn);
         }, function() {
             console.log("fail");
         });
