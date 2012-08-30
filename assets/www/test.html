@@ -72,11 +72,10 @@
        }); 
       
       $('#get_number').click(function(){
-      	alert("Trying to get number");
         window.plugins.phoneInfo.get(function(msisdn) {
             alert("Your number is " +msisdn);
         }, function() {
-            console.log("fail");
+            alert("fail to get phone number");
         });
 		});
 		
