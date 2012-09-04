@@ -50,6 +50,8 @@
     <plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
     <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
     <plugin name="phoneInfo" value="com.phonegap.plugins.phoneInfo.phoneInfo"/>
+    <plugin name="ipAddress" value="org.apache.cordova.plugins.IPAddressPlugin"/>
+    <plugin name="VideoPlayer" value="com.phonegap.plugins.video.VideoPlayer"/>
 </plugins>
 </cordova>
 

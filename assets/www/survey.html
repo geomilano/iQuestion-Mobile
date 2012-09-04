@@ -51,7 +51,7 @@
 				<form name='iqmform'>
 				<label for="questiontitle" class="select ui-select"><div id='question'>Downloading survey...</div></label>
 			
-				<label for="questiondesc" class="select ui-select"><div id='desc'></div></label>
+				<div id='desc'></div>
 				
 				<div id='displayquestion' ></div>	
 			</form>
@@ -67,7 +67,7 @@
 <div data-role="footer" data-position="fixed" class="geo_footer">		
 			<div data-role="navbar">
 				<ul>
-					<li><a id='prev' data-ajax='false' href='#' onClick="submitAnswer('prev');" data-transition='slide' data-direction='reverse'>Previous</a></li>
+					<li><a id='prev' data-ajax='false' href='#' onClick="goQuestion('','prev');" data-transition='slide' data-direction='reverse'>Previous</a></li>
 					<li><a id='next' data-ajax='false' href='#' onClick="submitAnswer('next');" data-transition='slide'>Next</a></li>
 				</ul>
 			</div>

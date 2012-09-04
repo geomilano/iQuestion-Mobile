@@ -10,6 +10,8 @@
 		<link rel="stylesheet" type="text/css" href="css/styles.css" />
 		<script type="text/javascript" charset="utf-8" src="js/cordova-2.0.0.js"></script>
 		<script type="text/javascript" charset="utf-8" src="js/phoneInfo.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/ipAddress.js"></script>
+		<script type="text/javascript" charset="utf-8" src="js/video.js"></script>
 		<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
 		<script type="text/javascript" src="js/jquery.mobile-1.1.1.js"></script>
 
@@ -40,20 +42,75 @@
 		<div data-role="content"> 
 			 <h2>Your Phone Number</h2>
     MSISDN: <span id="msisdn"></span><br/>
+    Country: <span id="country"></span><br/>
+    Operator Name: <span id="operator"></span><br/>
+    Serial No.: <span id="serial"></span><br/>
+    Device ID: <span id="deviceid"></span><br/>
+    Subscribe Number: <span id="sid"></span><br/>
+     <h2>Your IP Address</h2>
+    IP Address: <span id="ipaddress"></span><br/>
 				<a data-ajax='false' data-role='button' data-transition='flip' id='demo_delete'>Delete App Data</a>
-				<a data-ajax='false' data-role='button' data-transition='flip' id='get_number'>Get Phone Number</a>
+	
+				<a data-ajax='false' data-role='button' data-transition='flip' id='play_video'>Play Video</a>
 <script>
 	function init(){
 		 console.log("GOT AN ONLOAD!!!")
 		document.addEventListener("deviceready", onDeviceReady, true);
 		}
 	function onDeviceReady() {
-       window.plugins.phoneInfo.get(function(msisdn) {
-            var msisdnVal = document.getElementById('msisdn');
-            msisdnVal.innerHTML = msisdn;
+		
+		//Get phone detail
+    window.plugins.phoneInfo.getmsisdn(function(msisdn) {
+         var msisdnVal = document.getElementById('msisdn');
+         msisdnVal.innerHTML = msisdn;
+     }, function() {
+         msisdnVal.innerHTML = "Fail to get msisdn";
+     });
+		
+		window.plugins.phoneInfo.getcountry(function(country) {
+           var countryVal = document.getElementById('country');
+           countryVal.innerHTML = country;
         }, function() {
-            console.log("fail");
+           countryVal.innerHTML = "fail to get country";
         });
+        
+		 window.plugins.phoneInfo.getSimSerialNumber(function(serial) {
+           var serialVal = document.getElementById('serial');
+           serialVal.innerHTML = serial;
+        }, function() {
+            serialVal.innerHTML = "fail to get serial number";
+        });
+		 window.plugins.phoneInfo.getDeviceId(function(did) {
+           var didVal = document.getElementById('deviceid');
+           didVal.innerHTML = did;
+        }, function() {
+            didVal.innerHTML = "fail to get device id";
+     		});
+    
+     window.plugins.phoneInfo.getNetworkOperatorName(function(operator) {
+           var operatorVal = document.getElementById('operator');
+           operatorVal.innerHTML = operator;
+        }, function() {
+            operatorVal.innerHTML = "fail to get operator name";
+        });
+      
+      window.plugins.phoneInfo.getSubscriberId(function(sid) {
+           var sidVal = document.getElementById('sid');
+           sidVal.innerHTML = sid;
+        }, function() {
+            sidVal.innerHTML = "fail to get subscribe ID";
+        });
+     
+     
+     
+		//ipaddress  getipaddress
+		 window.plugins.ipAddress.getipaddress(function(address) {
+            var ipaddressVal = document.getElementById('ipaddress');
+            ipaddressVal.innerHTML = address;
+        }, function() {
+            alert("Cannot get IP address");
+        });
+	
 		
 			window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fs) {
             console.log("Root = " + fs.root.fullPath);
@@ -71,16 +128,13 @@
                alert(error.code);
        }); 
       
-      $('#get_number').click(function(){
-        window.plugins.phoneInfo.get(function(msisdn) {
-            alert("Your number is " +msisdn);
-        }, function() {
-            alert("fail to get phone number");
-        });
-		});
+     
 		
 
-		
+		$('#play_video').click(function(){
+			window.plugins.videoPlayer.play("http://commonsware.com/misc/test2.3gp");
+		});
+			
 		$('#demo_delete').click(function(){
 			// Delete file from app cache
 				 window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, function(fs) {

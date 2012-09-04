@@ -14,39 +14,41 @@ document.addEventListener("deviceready", onDeviceReady, false);
 		getdata();
 		$('#prev').removeClass('ui-disabled');
 		$('#next').removeClass('ui-disabled');
-		goQuestion("1",'');
+		goQuestion("q1_",'');
 	}
 	
 	/** Function **/   
 	function getdata(){				
-		  /* Load question from server*/
-			$.getJSON('http://beta.completemr.com/ilink/mytest/index.php', function(data) {
+		  /* Load question from server
+		     Demo Link: http://beta.completemr.com/ilink/mytest/index.php
+		  */
+		 
+			$.getJSON('http://beta.completemr.com/ilink/iquestion_mobile_api-1.0/index.php?p=getsurvey&survey_id=Q941404', function(data) {
 				var lquestionObj = localStorage.getItem("questionObj");
 				if(lquestionObj){
 					localStorage.removeItem('questionObj');
 				}				
 
-				$.each(data, function(key, val) {
-					if("extra" in val){
-						if("audio" in val['extra']){ 
-							/** Download to local if detect audio is available **/
-							download(val['extra']['audio']);	
-							
-							loopcheck=  setInterval(function() {
-				         if(tmplocalpath === undefined){
-				         		//Waiting for downloading end
-				         }else{
-				         	clearInterval(loopcheck);
-				         	data[key]['extra']['audio_local'] = tmplocalpath;		
-				         	localStorage.removeItem('questionObj');	
-				         	localStorage.setItem('questionObj', JSON.stringify(data));				         
-				        }
-				       }, 1000);
-						}
-					}
-				});
+//				$.each(data['ProjectContent'], function(key, val) {
+//					if(val['Type'] == 'audio'){
+//							/** Download to local if detect audio is available **/
+//							download(val['QAudio']);	
+//							
+//							loopcheck=  setInterval(function() {
+//				         if(tmplocalpath === undefined){
+//				         		//Waiting for downloading end
+//				         }else{
+//				         	clearInterval(loopcheck);
+//				         	data[key]['QAudio_local'] = tmplocalpath;		
+//				         	localStorage.removeItem('questionObj');	
+//				         	localStorage.setItem('questionObj', JSON.stringify(data['ProjectContent']));				         
+//				        }
+//				       }, 1000);
+//						
+//					}
+//				});
 				
-				localStorage.setItem('questionObj', JSON.stringify(data));			
+				localStorage.setItem('questionObj', JSON.stringify(data['ProjectContent']));			
 			});			
 	}
 	
@@ -54,14 +56,13 @@ document.addEventListener("deviceready", onDeviceReady, false);
 			// Set Page
 			if(quest_num != ""){
 				page =quest_num;
-				page = parseInt(page);
+			//	page = parseInt(page);
 			}
 			// Set Navigation
 			if(loadtype != ""){
 				if(loadtype == "prev"){
-					page -= 1;
-				}else{
-					page += 1;
+					var prevQuest = localStorage.getItem('prevQuest');
+					page = prevQuest;
 				}
 			}
 			
@@ -73,11 +74,12 @@ document.addEventListener("deviceready", onDeviceReady, false);
 			   }else{
 				  clearInterval(checkobj);
 				  reset_div();
-				  $.each(JSON.parse(retrievedObject), function(key, val) {				  	
+				  $.each(JSON.parse(retrievedObject), function(key, val) {	
+				  	
 				  	if(page == key){
 				  		localStorage.setItem('valObj', JSON.stringify(val));
-				  		localStorage.setItem('curQuest', val['name']);
-				  		if(page == '1'){
+				  		localStorage.setItem('curQuest', val['Name']);
+				  		if(page == 'q1_'){
 					  		$('#prev').addClass('ui-disabled');
 					  	}else{
 					  		$('#prev').removeClass('ui-disabled');	
@@ -88,33 +90,58 @@ document.addEventListener("deviceready", onDeviceReady, false);
 					  	}else{
 					  		$('#next').removeClass('ui-disabled');
 					  	}
-					  	
+	  	
 					  	//Display Question title
-					  	$("#question").html(val["question"]);
+					  	$("#question").html(val["Query"]);
 					  	temp ="";	
 					  	//Question Type : multiplechoice
-					  	if(val['type'] == "multiplechoice"){	  		
+					  	if(val['Type'] == "multiplechoice"){	  		
 								$.getScript("js/lib/multiplechoice.js");
 					  	}
 					  	
+					  	//Question Type : choicemultiple
+					  	if(val['Type'] == "choicemultiple"){	  		
+								$.getScript("js/lib/choicemultiple.js");
+					  	}
+					  	
+					  	//Question Type : choicemultiple
+					  	if(val['Type'] == "choiceopen"){	  		
+								$.getScript("js/lib/choiceopen.js");
+					  	}
+					  	
+					  	//Question Type : comment
+					  	if(val['Type'] == "comment"){	  		
+								$.getScript("js/lib/comment.js");
+					  	}
+					  	
+					  	//Question Type : intro
+					  	if(val['Type'] == "intro"){	  		
+								$.getScript("js/lib/intro.js");
+					  	}
+					  	
+					  	//Question Type : singlecol
+					  	if(val['Type'] == "singlecol"){	  		
+								$.getScript("js/lib/singlecol.js");
+					  	}
+					  	
 					  	//Question Type : multiplecheck
-					  	if(val['type'] == "multiplecheck"){	  		
+					  	if(val['Type'] == "multiplecheck"){	  		
 								$.getScript("js/lib/multiplecheck.js");
 					  	}						
-					  	
+				
 					  	//Question Type : choicesingle
-					  	if(val['type'] == "choicesingle"){
+					  	if(val['Type'] == "choicesingle"){
 									$.getScript("js/lib/choicesingle.js");
 					  	}
 					  	
 					  	//Question Type : textinput
-					  	if(val['type'] == "textinput"){
+					  	if(val['Type'] == "textinput"){
 								$.getScript("js/lib/textinput.js");
 					  	}
 					  	
-					  	//Question Type : selectrating
-					  	if(val['type'] == "selectrating"){
-								$.getScript("js/lib/selectrating.js");
+					  	//Question Type : ranking
+					  	if(val['Type'] == "ranking"){
+								$.getScript("js/lib/ranking.js");
 					  	}
 					  }
 				  });
@@ -125,49 +152,62 @@ document.addEventListener("deviceready", onDeviceReady, false);
 						
 		function submitAnswer(loadtype){
 			// get answer 
-			var curQuest = localStorage.getItem('curQuest');
+			var curQuest = localStorage.getItem('curQuest');			
+			var retrievedObject = localStorage.getItem('questionObj');
 			var ans = $("form").serialize();
 			var err = "0";
-		//	var ans = $("input:[type=name]"+curQuest).attr("value");
-		  var geo = ans.split("&");
-		  
-		  var keys=new Array();
-		  
-			for(var i=0; i < geo.length ; i++){
-				var qa = geo[i].split("=");
-				var res = qa[0].split("_");
-				keys[i] = res[0]+"_";
-			}
+			var nextQuest = "";
+			var Qtype = "";
+			$.each(JSON.parse(retrievedObject), function(key, val) {	
+				 if(curQuest == key){
+				 	
+				  	nextQuest =	 val['Next'];
+				  	Qtype =	 val['Type'];
+				  		
+				 }
+			});
 
-			for(var i=0; i < geo.length ; i++){
-				var qa = geo[i].split("=");
-
-				if(jQuery.inArray(curQuest,keys) == "-1"){
-					localStorage.setItem('errMsg', "Oops! You have not made a selection. Please try again");
-					err = "1";
-				}else{
-					var chkchild = qa[0].indexOf(curQuest);
-					
-					if(chkchild == 0){
-						var child = qa[0].split("_");
-						
-						if((curQuest == child[0]+"_") && (qa[1] == "")){
-							localStorage.setItem('errMsg', "Opps, please fill in the answer!");
-							err = "1";
-						}
-					}
-					
-					else if((curQuest == qa[0]) && (qa[1] == "")){
-						localStorage.setItem('errMsg', "Opps, you must select an answer!");
-						err = "1";
-					}
-				}
-				
-			}
-			
+//			if(Qtype != "intro"){
+//			  var geo = ans.split("&");
+//			  
+//			  var keys=new Array();
+//			  
+//				for(var i=0; i < geo.length ; i++){
+//					var qa = geo[i].split("=");
+//					var res = qa[0].split("_");
+//					keys[i] = res[0]+"_";
+//				}
+//	
+//				for(var i=0; i < geo.length ; i++){
+//					var qa = geo[i].split("=");
+//	
+//					if(jQuery.inArray(curQuest,keys) == "-1"){
+//						localStorage.setItem('errMsg', "Oops! You have not made a selection. Please try again");
+//						err = "1";
+//					}else{
+//						var chkchild = qa[0].indexOf(curQuest);
+//						
+//						if(chkchild == 0){
+//							var child = qa[0].split("_");
+//							
+//							if((curQuest == child[0]+"_") && (qa[1] == "")){
+//								localStorage.setItem('errMsg', "Opps, please fill in the answer!");
+//								err = "1";
+//							}
+//						}
+//						
+//						else if((curQuest == qa[0]) && (qa[1] == "")){
+//							localStorage.setItem('errMsg', "Opps, you must select an answer!");
+//							err = "1";
+//						}
+//					}
+//				}
+//			}
 			//proceed to next question
+			
 			if(err == "0"){
-				goQuestion('',loadtype);
+				localStorage.setItem('prevQuest',curQuest);
+				goQuestion(nextQuest,'');
 			}else if(err == "1"){
 				var errMsg = localStorage.getItem('errMsg');
 				alert(errMsg);
